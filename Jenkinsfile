@@ -19,7 +19,7 @@ pipeline {
 
   stages {
 
-    stage('Checkout') {
+    stage 'Checkout' {
       steps {
         // https://jenkins.io/doc/pipeline/steps/git/
         def scmVars = checkout scm
@@ -32,19 +32,19 @@ pipeline {
       }
     }
 
-    stage('Build') {
+    stage 'Build' {
       steps {
         dockerContainerRunMaven 'clean package'
       }
     }
 
-    stage('Deploy Artifact') {
+    stage 'Deploy Artifact' {
       steps {
         dockerContainerRunMaven 'deploy'
       }
     }
 
-    stage('Deploy to environnement') {
+    stage 'Deploy to environnement' {
       when {
         expression {
           echo "Should I deploy ?"
