@@ -1,7 +1,4 @@
 #!groovy
-import groovy.transform.Field
-
-@Field def MY_CONSTANT = "toto"
 
 def dockerContainerRunMaven(mvnArgs){
   configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
@@ -21,7 +18,7 @@ pipeline {
 
   stages {
 
-    stage 'Checkout' {
+    stage 'Checkout Source' {
       steps {
         // https://jenkins.io/doc/pipeline/steps/git/
         def scmVars = checkout scm
@@ -34,7 +31,7 @@ pipeline {
       }
     }
 
-    stage 'Build' {
+    stage 'Build Package' {
       steps {
         if (RUN_UNIT_TESTS) {
           dockerContainerRunMaven 'clean package'
@@ -46,11 +43,7 @@ pipeline {
 
     stage 'Deploy Artifact' {
       steps {
-        if (RUN_UNIT_TESTS) {
-          dockerContainerRunMaven 'deploy'
-        } else {
-          dockerContainerRunMaven 'deploy -DskipTests'
-        }
+        dockerContainerRunMaven 'deploy -DskipTests'
       }
     }
 
