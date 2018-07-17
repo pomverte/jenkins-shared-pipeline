@@ -41,16 +41,26 @@ pipeline {
       }
     }
 
-    stage 'Deploy Artifact' {
-      steps {
-        dockerContainerRunMaven 'deploy -DskipTests'
+    stage 'Parallel Stages' {
+      parallel {
+        stage 'Deploy Artifact' {
+          steps {
+            dockerContainerRunMaven 'deploy -DskipTests'
+          }
+        }
+        stage 'SonarQube Analyze' {
+          steps {
+            echo 'TODO run SonarQube'
+            //dockerContainerRunMaven 'sonar:sonar -Dsonar.branch=${env.BRANCH_NAME}'
+          }
+        }
       }
     }
 
     stage 'Deploy to environnement' {
       when {
         expression {
-          echo "Should I deploy ?"
+          echo 'Should I deploy ?'
           return false
         }
         // deploy to env
@@ -64,6 +74,11 @@ pipeline {
     post {
       always {
         echo "TODO send notification ${currentBuild.absoluteUrl} ${currentBuild.currentResult}"
+        def slackColor = ('SUCCESS' == ${currentBuild.currentResult}) ? 'good' : 'danger'
+        slackSend channel: '#ops-room',
+          color: ${slackColor},
+          message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
+          botUser: true
       }
     }
 
