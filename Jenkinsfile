@@ -1,3 +1,4 @@
+#!groovy
 import groovy.transform.Field
 
 @Field def MY_CONSTANT = "toto"
@@ -13,6 +14,7 @@ pipeline {
   agent any
 
   environment {
+    RUN_UNIT_TESTS = true
     ARTIFACT_ID = readMavenPom().getArtifactId()
     ARTIFACT_VERSION = readMavenPom().getVersion()
   }
@@ -34,13 +36,21 @@ pipeline {
 
     stage 'Build' {
       steps {
-        dockerContainerRunMaven 'clean package'
+        if (RUN_UNIT_TESTS) {
+          dockerContainerRunMaven 'clean package'
+        } else {
+          dockerContainerRunMaven 'clean package -DskipTests'
+        }
       }
     }
 
     stage 'Deploy Artifact' {
       steps {
-        dockerContainerRunMaven 'deploy'
+        if (RUN_UNIT_TESTS) {
+          dockerContainerRunMaven 'deploy'
+        } else {
+          dockerContainerRunMaven 'deploy -DskipTests'
+        }
       }
     }
 
@@ -60,7 +70,7 @@ pipeline {
 
     post {
       always {
-        echo "TODO send notiification ${currentBuild.absoluteUrl} ${currentBuild.currentResult}"
+        echo "TODO send notification ${currentBuild.absoluteUrl} ${currentBuild.currentResult}"
       }
     }
 
