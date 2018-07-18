@@ -63,7 +63,7 @@ pipeline {
       }
     }
 
-    stage 'Deploy to environnement' {
+    stage 'Deploy to environment' {
       when {
         expression {
           echo 'Should I deploy ?'
