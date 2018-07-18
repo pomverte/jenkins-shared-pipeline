@@ -6,7 +6,7 @@ def dockerContainerRunMaven(mvnArgs){
   }
 }
 
-def sendSlackNotification(color, channel = '#ops-room') {
+def notifySlack(color, channel = '#ops-room') {
   slackSend channel: ${channel},
     color: ${color},
     message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
@@ -28,6 +28,20 @@ pipeline {
   }
 
   stages {
+
+    stage 'Information' {
+      def commit = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%h\'  origin/' + env.BRANCH_NAME).trim()
+      def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%an\' origin/' + env.BRANCH_NAME).trim()
+      def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' origin/' + env.BRANCH_NAME).trim()
+      def comment = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%B\' origin/' + env.BRANCH_NAME).trim()
+      echo """
+        Branch : ${env.BRANCH_NAME}
+        Author : ${author}
+        Email : ${authorEmail}
+        Commit : ${commit}
+        Comment : ${comment}
+      """
+    }
 
     stage 'Build Package' {
       when {
@@ -76,11 +90,11 @@ pipeline {
 
     post {
       success {
-        sendSlackNotification 'good'
+        notifySlack 'good'
       }
       failure {
         // TODO send mail
-        sendSlackNotification 'danger'
+        notifySlack 'danger'
       }
     }
 
