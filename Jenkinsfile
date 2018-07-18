@@ -6,7 +6,7 @@ def dockerContainerRunMaven(mvnArgs){
   }
 }
 
-def notifySlack(color, channel = '#ops-room') {
+def notifySlack(color, channel = '#jenkins-notifications') {
   slackSend channel: ${channel},
     color: ${color},
     message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
@@ -40,6 +40,8 @@ pipeline {
         Email : ${authorEmail}
         Commit : ${commit}
         Comment : ${comment}
+        ArtifactId : ${ARTIFACT_ID}
+        Version : ${ARTIFACT_VERSION}
       """
     }
 
