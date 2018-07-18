@@ -23,6 +23,10 @@ pipeline {
     ARTIFACT_VERSION = readMavenPom().getVersion()
   }
 
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+  }
+
   stages {
 
     stage 'Build Package' {
@@ -31,7 +35,6 @@ pipeline {
       }
       steps {
         dockerContainerRunMaven 'clean package'
-
       }
       when {
         not { environment name: 'RUN_UNIT_TESTS', value: 'true' }
