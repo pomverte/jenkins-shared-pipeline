@@ -11,33 +11,39 @@ pipeline {
   agent any
 
   environment {
-    RUN_UNIT_TESTS = true
+    RUN_UNIT_TESTS = 'true'
     ARTIFACT_ID = readMavenPom().getArtifactId()
     ARTIFACT_VERSION = readMavenPom().getVersion()
   }
 
   stages {
 
-    stage 'Checkout Source' {
-      steps {
-        // https://jenkins.io/doc/pipeline/steps/git/
-        def scmVars = checkout scm
-        echo '==================================='
-        echo 'Author : ${scmVars.GIT_AUTHOR_NAME}'
-        echo 'Email : ${scmVars.GIT_AUTHOR_EMAIL}'
-        echo 'Branch : ${scmVars.GIT_BRANCH}'
-        echo 'Commit : ${scmVars.GIT_COMMIT}'
-        echo '==================================='
-      }
-    }
+//    stage 'Checkout Source' {
+//      steps {
+//        // https://jenkins.io/doc/pipeline/steps/git/
+//        def scmVars = checkout scm
+//        echo '==================================='
+//        echo 'Author : ${scmVars.GIT_AUTHOR_NAME}'
+//        echo 'Email : ${scmVars.GIT_AUTHOR_EMAIL}'
+//        echo 'Branch : ${scmVars.GIT_BRANCH}'
+//        echo 'Commit : ${scmVars.GIT_COMMIT}'
+//        echo '==================================='
+//      }
+//    }
 
     stage 'Build Package' {
+      when {
+        environment name: 'RUN_UNIT_TESTS', value: 'true'
+      }
       steps {
-        if (RUN_UNIT_TESTS) {
-          dockerContainerRunMaven 'clean package'
-        } else {
-          dockerContainerRunMaven 'clean package -DskipTests'
-        }
+        dockerContainerRunMaven 'clean package'
+
+      }
+      when {
+        not { environment name: 'RUN_UNIT_TESTS', value: 'true' }
+      }
+      steps {
+        dockerContainerRunMaven 'clean package -DskipTests'
       }
     }
 
