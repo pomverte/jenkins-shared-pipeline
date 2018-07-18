@@ -6,6 +6,13 @@ def dockerContainerRunMaven(mvnArgs){
   }
 }
 
+def sendSlackNotification(color, channel = '#ops-room') {
+  slackSend channel: ${channel},
+    color: ${color},
+    message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
+    botUser: true
+}
+
 pipeline {
 
   agent any
@@ -17,19 +24,6 @@ pipeline {
   }
 
   stages {
-
-//    stage 'Checkout Source' {
-//      steps {
-//        // https://jenkins.io/doc/pipeline/steps/git/
-//        def scmVars = checkout scm
-//        echo '==================================='
-//        echo 'Author : ${scmVars.GIT_AUTHOR_NAME}'
-//        echo 'Email : ${scmVars.GIT_AUTHOR_EMAIL}'
-//        echo 'Branch : ${scmVars.GIT_BRANCH}'
-//        echo 'Commit : ${scmVars.GIT_COMMIT}'
-//        echo '==================================='
-//      }
-//    }
 
     stage 'Build Package' {
       when {
@@ -78,13 +72,12 @@ pipeline {
     }
 
     post {
-      always {
-        echo "TODO send notification ${currentBuild.absoluteUrl} ${currentBuild.currentResult}"
-        def slackColor = ('SUCCESS' == ${currentBuild.currentResult}) ? 'good' : 'danger'
-        slackSend channel: '#ops-room',
-          color: ${slackColor},
-          message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
-          botUser: true
+      success {
+        sendSlackNotification 'good'
+      }
+      failure {
+        // TODO send mail
+        sendSlackNotification 'danger'
       }
     }
 
