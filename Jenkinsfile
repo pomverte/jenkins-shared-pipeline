@@ -16,7 +16,7 @@ def notifySlack(color, channel = '#jenkins-notifications') {
 
 pipeline {
 
-  agent any
+  agent none
 
   environment {
     RUN_UNIT_TESTS = 'true'
