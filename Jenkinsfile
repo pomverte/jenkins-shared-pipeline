@@ -10,6 +10,7 @@ def notifySlack(color, channel = '#jenkins-notifications') {
   slackSend channel: ${channel},
     color: ${color},
     message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
+//    attachments: "",
     botUser: true
 }
 
@@ -29,7 +30,7 @@ pipeline {
 
   stages {
 
-    stage 'Information' {
+    stage('Information') {
       def commit = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%h\'  origin/' + env.BRANCH_NAME).trim()
       def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%an\' origin/' + env.BRANCH_NAME).trim()
       def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' origin/' + env.BRANCH_NAME).trim()
@@ -45,7 +46,7 @@ pipeline {
       """
     }
 
-    stage 'Build Package' {
+    stage('Build Package') {
       when {
         environment name: 'RUN_UNIT_TESTS', value: 'true'
       }
@@ -60,14 +61,14 @@ pipeline {
       }
     }
 
-    stage 'Parallel Stages' {
+    stage('Parallel Stages') {
       parallel {
-        stage 'Deploy Artifact' {
+        stage('Deploy Artifact') {
           steps {
             dockerContainerRunMaven 'deploy -DskipTests'
           }
         }
-        stage 'SonarQube Analyze' {
+        stage('SonarQube Analyze') {
           steps {
             echo 'TODO run SonarQube'
             //dockerContainerRunMaven 'sonar:sonar -Dsonar.branch=${env.BRANCH_NAME}'
@@ -76,7 +77,7 @@ pipeline {
       }
     }
 
-    stage 'Deploy to environment' {
+    stage('Deploy to environment') {
       when {
         expression {
           echo 'Should I deploy ?'
