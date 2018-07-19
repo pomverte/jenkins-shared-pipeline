@@ -38,13 +38,13 @@ pipeline {
           def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' origin/' + env.BRANCH_NAME).trim()
           def comment = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%B\' origin/' + env.BRANCH_NAME).trim()
           echo """
-            Branch : ${env.BRANCH_NAME}
-            Author : ${author}
-            Email : ${authorEmail}
-            Commit : ${commit}
-            Comment : ${comment}
-            ArtifactId : ${ARTIFACT_ID}
-            Version : ${ARTIFACT_VERSION}
+    Branch : ${env.BRANCH_NAME}
+    Author : ${author}
+    Email : ${authorEmail}
+    Commit : ${commit}
+    Comment : ${comment}
+    ArtifactId : ${ARTIFACT_ID}
+    Version : ${ARTIFACT_VERSION}
           """
         }
       }
