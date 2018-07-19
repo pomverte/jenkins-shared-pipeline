@@ -8,10 +8,10 @@ def dockerContainerRunMaven(mvnArgs){
 
 def notifySlack(color, channel = '#jenkins-notifications') {
   slackSend channel: ${channel},
-    color: ${color},
-    message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
+      color: ${color},
+      message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
 //    attachments: "",
-    botUser: true
+      botUser: true
 }
 
 pipeline {
@@ -31,19 +31,23 @@ pipeline {
   stages {
 
     stage('Information') {
-      def commit = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%h\'  origin/' + env.BRANCH_NAME).trim()
-      def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%an\' origin/' + env.BRANCH_NAME).trim()
-      def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' origin/' + env.BRANCH_NAME).trim()
-      def comment = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%B\' origin/' + env.BRANCH_NAME).trim()
-      echo """
-        Branch : ${env.BRANCH_NAME}
-        Author : ${author}
-        Email : ${authorEmail}
-        Commit : ${commit}
-        Comment : ${comment}
-        ArtifactId : ${ARTIFACT_ID}
-        Version : ${ARTIFACT_VERSION}
-      """
+      steps {
+        script {
+          def commit = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%h\'  origin/' + env.BRANCH_NAME).trim()
+          def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%an\' origin/' + env.BRANCH_NAME).trim()
+          def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' origin/' + env.BRANCH_NAME).trim()
+          def comment = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%B\' origin/' + env.BRANCH_NAME).trim()
+          echo """
+            Branch : ${env.BRANCH_NAME}
+            Author : ${author}
+            Email : ${authorEmail}
+            Commit : ${commit}
+            Comment : ${comment}
+            ArtifactId : ${ARTIFACT_ID}
+            Version : ${ARTIFACT_VERSION}
+          """
+        }
+      }
     }
 
     stage('Build Package') {
