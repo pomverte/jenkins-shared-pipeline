@@ -9,14 +9,15 @@ def call(body) {
 
   def gitCommitId
 
+  def mavenDockerImage = 'maven:3.5.4-jdk-8-alpine'
+  def ansibleDockerImage = 'williamyeh/ansible:alpine3'
+
   pipeline {
 
     agent any
 
     environment {
       DOCKER_REGISTRY_USER = 'sirh'
-      MAVEN_DOCKER_IMAGE = 'maven:3.5.4-jdk-8-alpine'
-      ANSIBLE_DOCKER_IMAGE = 'williamyeh/ansible:alpine3'
 
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
@@ -141,7 +142,7 @@ Version : ${ARTIFACT_VERSION}
         }
         agent {
           docker {
-            image "${ANSIBLE_DOCKER_IMAGE}"
+            image "${ansibleDockerImage}"
           }
         }
         steps {
