@@ -10,8 +10,8 @@ def call(body) {
     agent any
 
     environment {
-      RUN_UNIT_TESTS = ${pipelineParams.runUnitTests}
-      DEPLOY_ARTIFACT = ${pipelineParams.deployArtifact}
+      RUN_UNIT_TESTS = "${pipelineParams.runUnitTests}"
+      DEPLOY_ARTIFACT = "${pipelineParams.deployArtifact}"
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
       DOCKER_REGISTRY_USER = 'sirh'
