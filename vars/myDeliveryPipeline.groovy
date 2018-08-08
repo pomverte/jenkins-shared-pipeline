@@ -135,6 +135,7 @@ def call(body) {
           }
         }
         steps {
+          sh 'ansible-playbook --version'
         }
       }
     }
