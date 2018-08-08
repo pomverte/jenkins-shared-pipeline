@@ -61,7 +61,7 @@ Version : ${ARTIFACT_VERSION}
         }
         agent {
           docker {
-            image 'maven:3.5.4-jdk-8-alpine'
+            image "${mavenDockerImage}"
             args '-v $HOME/.m2:/root/.m2'
           }
         }
@@ -77,7 +77,7 @@ Version : ${ARTIFACT_VERSION}
         }
         agent {
           docker {
-            image 'maven:3.5.4-jdk-8-alpine'
+            image "${mavenDockerImage}"
             args '-v $HOME/.m2:/root/.m2'
           }
         }
