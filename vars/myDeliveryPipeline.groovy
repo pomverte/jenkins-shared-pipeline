@@ -1,8 +1,8 @@
 def call(body) {
   // evaluate the body block, and collect configuration into the object
-  def pipelineParams= [:]
+  def config = [:]
   body.resolveStrategy = Closure.DELEGATE_FIRST
-  body.delegate = pipelineParams
+  body.delegate = config
   body()
 
   pipeline {
@@ -10,8 +10,8 @@ def call(body) {
     agent any
 
     environment {
-      RUN_UNIT_TESTS = "${pipelineParams.runUnitTests}"
-      DEPLOY_ARTIFACT = "${pipelineParams.deployArtifact}"
+      RUN_UNIT_TESTS = "${config.runUnitTests}"
+      DEPLOY_ARTIFACT = "${config.deployArtifact}"
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
       DOCKER_REGISTRY_USER = 'sirh'
