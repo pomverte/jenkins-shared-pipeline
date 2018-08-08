@@ -93,30 +93,6 @@ def call(Closure body) {
         }
       }
 
-      stage('Docker image build and tag') {
-        steps {
-          sh "docker image build -t ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION} -t ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${gitCommitId} ."
-        }
-      }
-      stage('Docker image tag latest') {
-        when {
-          branch 'master'
-        }
-        steps {
-          sh 'docker image tag ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION} ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:latest'
-        }
-      }
-      stage('Docker image push') {
-        steps {
-          echo 'TODO docker image push ...'
-          //sh 'docker login -u=${DOCKER_USER} -p=${DOCKER_PASSWORD} ${DOCKER_REGISTRY}'
-          //sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION}'
-          //sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${gitCommitId}'
-          //sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:latest'
-          //sh 'docker logout'
-        }
-      }
-
       stage('Ansible deploy') {
         when {
           environment name: 'ANSIBLE_DEPLOY', value: 'true'
