@@ -3,9 +3,9 @@ def call(body) {
   def config = [:]
   body.resolveStrategy = Closure.DELEGATE_FIRST
   body.delegate = config
-  echo "config : ${config}"
   body()
-  echo "config : ${config}"
+
+  echo "Pipeline configuration :\n${config}\n"
 
   def gitCommitId
 
@@ -14,11 +14,16 @@ def call(body) {
     agent any
 
     environment {
-      RUN_UNIT_TESTS = "${config.runUnitTests}"
-      DEPLOY_ARTIFACT = "${config.deployArtifact}"
+      DOCKER_REGISTRY_USER = 'sirh'
+      MAVEN_DOCKER_IMAGE = "${config.mavenDockerImage}" ?: 'maven:3.5.4-jdk-8-alpine'
+      ANSIBLE_DOCKER_IMAGE = 'williamyeh/ansible:alpine3'
+
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
-      DOCKER_REGISTRY_USER = 'sirh'
+
+      RUN_UNIT_TESTS = "${config.runUnitTests}" ?: 'true'
+      NEXUS_DEPLOY = "${config.nexusDeploy}" ?: 'true'
+      ANSIBLE_DEPLOY = "${config.ansibleDeploy}" ?: 'true'
     }
 
     options {
@@ -31,17 +36,19 @@ def call(body) {
         steps {
           script {
             gitCommitId = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-            def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%an\' origin/' + env.BRANCH_NAME).trim()
-            def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' origin/' + env.BRANCH_NAME).trim()
-            def comment = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%B\' origin/' + env.BRANCH_NAME).trim()
+            def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%an\' HEAD').trim()
+            def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\' HEAD').trim()
+            def comment = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%B\' HEAD').trim()
             echo """
-    Branch : ${env.BRANCH_NAME}
-    Author : ${author}
-    Email : ${authorEmail}
-    Commit : ${gitCommitId}
-    Comment : ${comment}
-    ArtifactId : ${ARTIFACT_ID}
-    Version : ${ARTIFACT_VERSION}
+
+Branch : ${env.BRANCH_NAME}
+Author : ${author}
+Email : ${authorEmail}
+Commit : ${gitCommitId}
+Comment : ${comment}
+ArtifactId : ${ARTIFACT_ID}
+Version : ${ARTIFACT_VERSION}
+
           """
           }
         }
@@ -82,7 +89,7 @@ def call(body) {
 
       stage('Deploy Artifact') {
         when {
-          environment name: 'DEPLOY_ARTIFACT', value: 'true'
+          environment name: 'NEXUS_DEPLOY', value: 'true'
         }
         agent {
           docker {
@@ -129,9 +136,12 @@ def call(body) {
       }
 
       stage('Ansible deploy') {
+        when {
+          environment name: 'ANSIBLE_DEPLOY', value: 'true'
+        }
         agent {
           docker {
-            image 'williamyeh/ansible:alpine3'
+            image "${ANSIBLE_DOCKER_IMAGE}"
           }
         }
         steps {
