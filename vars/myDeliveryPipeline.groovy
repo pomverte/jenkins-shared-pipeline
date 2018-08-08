@@ -128,6 +128,15 @@ def call(body) {
         }
       }
 
+      stage('Ansible deploy') {
+        agent {
+          docker {
+            image 'williamyeh/ansible:alpine3'
+          }
+        }
+        steps {
+        }
+      }
     }
 
     post {
