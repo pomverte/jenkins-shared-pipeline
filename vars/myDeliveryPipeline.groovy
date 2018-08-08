@@ -21,9 +21,9 @@ def call(body) {
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
 
-      RUN_UNIT_TESTS = "${config.runUnitTests}" ?: 'true'
-      NEXUS_DEPLOY = "${config.nexusDeploy}" ?: 'true'
-      ANSIBLE_DEPLOY = "${config.ansibleDeploy}" ?: 'true'
+      RUN_UNIT_TESTS = "${config.runUnitTests}"
+      NEXUS_DEPLOY = "${config.nexusDeploy}"
+      ANSIBLE_DEPLOY = "${config.ansibleDeploy}"
     }
 
     options {
