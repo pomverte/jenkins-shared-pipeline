@@ -1,3 +1,6 @@
+//import groovy.transform.Field
+//@Field
+
 def call(body) {
   // evaluate the body block, and collect configuration into the object
   def config = [:]
@@ -17,7 +20,7 @@ def call(body) {
     agent any
 
     environment {
-      DOCKER_REGISTRY_USER = 'sirh'
+      DOCKER_REGISTRY_USER = 'hvle'
 
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
