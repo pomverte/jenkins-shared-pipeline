@@ -69,9 +69,7 @@ Version : ${ARTIFACT_VERSION}
           }
         }
         steps {
-          configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-            sh 'mvn -B -s ${MAVEN_SETTINGS} clean package'
-          }
+          runMavenGoal 'clean package'
         }
       }
       stage('Build Package Skip Tests') {
@@ -85,9 +83,7 @@ Version : ${ARTIFACT_VERSION}
           }
         }
         steps {
-          configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-            sh 'mvn -B -s ${MAVEN_SETTINGS} clean package -DskipTests'
-          }
+          runMavenGoal 'clean package -DskipTests'
         }
       }
 
