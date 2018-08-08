@@ -15,7 +15,7 @@ def call(body) {
 
     environment {
       DOCKER_REGISTRY_USER = 'sirh'
-      MAVEN_DOCKER_IMAGE = "${config.mavenDockerImage}" ?: 'maven:3.5.4-jdk-8-alpine'
+      MAVEN_DOCKER_IMAGE = 'maven:3.5.4-jdk-8-alpine'
       ANSIBLE_DOCKER_IMAGE = 'williamyeh/ansible:alpine3'
 
       ARTIFACT_ID = readMavenPom().getArtifactId()
