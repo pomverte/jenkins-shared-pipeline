@@ -38,7 +38,7 @@ def call(Closure body) {
 
       stage('Information') {
         steps {
-          displayInformation
+          displayInformation("${ARTIFACT_ID}", "${ARTIFACT_VERSION}", "${gitCommitId}")
         }
       }
 
