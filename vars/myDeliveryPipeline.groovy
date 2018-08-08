@@ -77,15 +77,13 @@ def call(Closure body) {
         }
         agent {
           docker {
-            image 'maven:3.5.4-jdk-8-alpine'
+            image "${mavenDockerImage}"
             args '-v $HOME/.m2:/root/.m2'
             reuseNode true
           }
         }
         steps {
-          configFileProvider([configFile(fileId: 'maven-settings', variable: 'MAVEN_SETTINGS')]) {
-            sh 'mvn -B -s ${MAVEN_SETTINGS} deploy -DskipTests'
-          }
+          runMavenGoal 'deploy -DskipTests'
         }
       }
 
@@ -136,7 +134,7 @@ def call(Closure body) {
 
     post {
       always {
-        notifySlack ${currentBuild.currentResult}
+        notifySlack "${currentBuild.currentResult}"
       }
     }
 
