@@ -1,7 +1,7 @@
 //import groovy.transform.Field
 //@Field
 
-def call(body) {
+def call(Closure body) {
   // evaluate the body block, and collect configuration into the object
   def config = [:]
   body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -155,19 +155,8 @@ Version : ${ARTIFACT_VERSION}
     }
 
     post {
-      success {
-        echo "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}"
-        // TODO send slack
-//        slackSend channel: '#jenkins',
-//            color: 'good',
-//            message: "Build ${env.JOB_NAME} ${env.BUILD_NUMBER} status : ${currentBuild.currentResult}.\n${env.BUILD_URL}",
-//            attachments: "",
-//            botUser: true
-      }
-      failure {
-        // TODO send mail / slack
-        echo "I have not failed. I've just found 10 000 ways that won't work. -Thomas Edison"
-        echo "Failure is unimportant. It takes courage to make a fool of yourself. -Charlie Chaplin"
+      always {
+        notifySlack ${currentBuild.currentResult}
       }
     }
 
