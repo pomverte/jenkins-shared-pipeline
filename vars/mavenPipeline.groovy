@@ -18,8 +18,6 @@ def call(Closure body) {
     agent any
 
     environment {
-      DOCKER_REGISTRY_USER = 'hvle'
-
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
 
