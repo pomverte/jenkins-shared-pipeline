@@ -1,5 +1,18 @@
 = Jenkins Shared Pipelines
 
+== Use me
+
+.Jenkinsfile
+[source,groovy]
+----
+#!groovy
+myDeliveryPipeline {
+  runUnitTests = 'false'
+  nexusDeploy = 'false'
+  ansibleDeploy = 'true'
+}
+----
+
 == References
 
 * https://jenkins.io/doc/book/pipeline/
