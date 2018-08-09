@@ -7,8 +7,6 @@ def call(Closure body) {
 
   echo "Pipeline configuration :\n${config}\n"
 
-  def gitCommitId
-
   pipeline {
 
     agent any
@@ -26,13 +24,16 @@ def call(Closure body) {
 
       stage('Information') {
         steps {
-          displayInformation("${ARTIFACT_ID}", "${ARTIFACT_VERSION}", "${gitCommitId}")
+          displayInformation("${ARTIFACT_ID}", "${ARTIFACT_VERSION}")
         }
       }
 
       stage('Docker image build and tag') {
         steps {
-          sh "docker image build -t ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION} -t ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${gitCommitId} ."
+          script {
+            def sha1 = gitCommitId()
+            sh "docker image build -t ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION} -t ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${sha1} ."
+          }
         }
       }
       stage('Docker image tag latest') {
@@ -53,7 +54,7 @@ def call(Closure body) {
                 usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
               sh 'docker login -u=${DOCKER_REGISTRY_USER} -p=${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY_SERVER}'
               sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION}'
-              sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${gitCommitId}'
+              sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:' + gitCommitId()
               if ('master' == ${env.BRANCH_NAME}) {
                 sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:latest'
               }

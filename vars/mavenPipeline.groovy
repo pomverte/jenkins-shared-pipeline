@@ -10,8 +10,6 @@ def call(Closure body) {
 
   echo "Pipeline configuration :\n${config}\n"
 
-  def gitCommitId
-
   def mavenDockerImage = 'maven:3.5.4-jdk-8-alpine'
   def ansibleDockerImage = 'williamyeh/ansible:alpine3'
 
@@ -38,7 +36,7 @@ def call(Closure body) {
 
       stage('Information') {
         steps {
-          displayInformation("${ARTIFACT_ID}", "${ARTIFACT_VERSION}", "${gitCommitId}")
+          displayInformation("${ARTIFACT_ID}", "${ARTIFACT_VERSION}")
         }
       }
 

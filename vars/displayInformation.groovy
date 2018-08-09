@@ -1,6 +1,6 @@
-def call(String artifactId, String artifactVersion, String gitCommitId) {
+def call(String artifactId, String artifactVersion) {
 
-  gitCommitId = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+  def gitCommitId = gitCommitId()
   def author = gitCommitAuthor()
   def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=%ae HEAD').trim()
   def commitMessage = sh(returnStdout: true, script: 'git --no-pager show -s --format=%B HEAD').trim()
