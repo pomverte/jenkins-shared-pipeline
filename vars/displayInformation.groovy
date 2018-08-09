@@ -4,9 +4,6 @@ def call(String artifactId, String artifactVersion, String gitCommitId) {
   def author = gitCommitAuthor()
   def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=%ae HEAD').trim()
   def commitMessage = sh(returnStdout: true, script: 'git --no-pager show -s --format=%B HEAD').trim()
-
-  echo "AUTHOR : ${author}"
-
   echo """
 
 Branch : ${env.BRANCH_NAME}
