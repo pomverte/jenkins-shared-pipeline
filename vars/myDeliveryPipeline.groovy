@@ -110,7 +110,7 @@ def call(Closure body) {
 
     post {
       always {
-        notifySlack "${currentBuild.currentResult}"
+        notifySlack "${currentBuild.currentResult}", "#graylog-notifications"
       }
     }
 
