@@ -1,6 +1,3 @@
-//import groovy.transform.Field
-//@Field
-
 def call(Closure body) {
   // evaluate the body block, and collect configuration into the object
   def config = [:]
@@ -12,9 +9,6 @@ def call(Closure body) {
 
   def gitCommitId
 
-  def mavenDockerImage = 'maven:3.5.4-jdk-8-alpine'
-  def ansibleDockerImage = 'williamyeh/ansible:alpine3'
-
   pipeline {
 
     agent any
@@ -25,9 +19,7 @@ def call(Closure body) {
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
 
-      RUN_UNIT_TESTS = "${config.runUnitTests}"
       NEXUS_DEPLOY = "${config.nexusDeploy}"
-      ANSIBLE_DEPLOY = "${config.ansibleDeploy}"
     }
 
     options {
