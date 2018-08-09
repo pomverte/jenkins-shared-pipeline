@@ -11,7 +11,7 @@ def call(String buildStatus, String[] channels = []) {
       def jobNameShort = jobNameSplitted.size() > 1 ? jobNameSplitted[1] : jobNameDecoded
       def author = sh(returnStdout: true, script: 'git --no-pager show -s --format=%an HEAD').trim()
 
-      channels << '#jenkins'
+      channels += "#jenkins"
       channels.each {
         sh "curl -X POST -H 'Content-type: application/json' --data '${slackData}' https://hooks.slack.com/services/${SLACK_API_TOKEN}"
       }
