@@ -58,7 +58,7 @@ def call(Closure body) {
       stage('Docker image push') {
         steps {
           script {
-            withCredentials([usernamePassword(credentialsId: DOCKER_REGISTRY_CREDENTIAL,
+            withCredentials([usernamePassword(credentialsId: 'DOCKER_REGISTRY_CREDENTIAL',
                 usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
               sh 'docker login -u=${DOCKER_REGISTRY_USER} -p=${DOCKER_REGISTRY_PASSWORD} ${DOCKER_REGISTRY_SERVER}'
               sh 'docker image push ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION}'
@@ -68,7 +68,7 @@ def call(Closure body) {
               }
               sh 'docker logout'
             }
-            //withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: DOCKER_REGISTRY_CREDENTIAL,
+            //withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'DOCKER_REGISTRY_CREDENTIAL',
             //                  usernameVariable: 'DOCKER_REGISTRY_USER', passwordVariable: 'DOCKER_REGISTRY_PASSWORD']]) {
             //}
           }
