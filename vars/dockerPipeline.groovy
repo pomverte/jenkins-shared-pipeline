@@ -1,3 +1,5 @@
+// maybe we could use : https://qa.nuxeo.org/jenkins/pipeline-syntax/globals#docker
+
 def call(Closure body) {
   // evaluate the body block, and collect configuration into the object
   def config = [:]
@@ -12,7 +14,9 @@ def call(Closure body) {
     agent any
 
     environment {
-      DOCKER_REGISTRY_SERVER = ''
+      //DOCKER_REGISTRY_SERVER = ''
+      DOCKER_REGISTRY_USER = "vietnem"
+      PUSH_DOCKER_IMAGE = "${config.pushDockerImage}"
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
     }
@@ -36,7 +40,7 @@ def call(Closure body) {
       }
       stage('Docker image push') {
         when {
-          expression { return ${config.pushDockerImage} }
+          environment name: 'PUSH_DOCKER_IMAGE', value: 'true'
         }
         steps {
           dockerImagePush()
