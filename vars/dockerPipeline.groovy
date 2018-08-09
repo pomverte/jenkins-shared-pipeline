@@ -14,12 +14,8 @@ def call(Closure body) {
     agent any
 
     environment {
-      DOCKER_REGISTRY_USER = 'hvle'
-
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
-
-      NEXUS_DEPLOY = "${config.nexusDeploy}"
     }
 
     options {
@@ -48,6 +44,9 @@ def call(Closure body) {
         }
       }
       stage('Docker image push') {
+        when {
+          expression { return ${config.pushDockerImage} }
+        }
         steps {
           script {
             withCredentials([usernamePassword(credentialsId: 'DOCKER_REGISTRY_CREDENTIAL',

@@ -13,6 +13,15 @@ mavenPipeline {
 }
 ----
 
+.Jenkinsfile
+[source,groovy]
+----
+#!groovy
+dockerPipeline {
+  pushDockerImage = false
+}
+----
+
 == References
 
 * https://jenkins.io/doc/book/pipeline/
