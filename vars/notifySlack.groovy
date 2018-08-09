@@ -10,7 +10,7 @@ def call(String buildStatus, String[] channels = []) {
       def jobNameDecoded = URLDecoder.decode("${env.JOB_NAME}", "UTF-8")
       def jobNameSplitted = jobNameDecoded.split('/')
       def jobNameShort = jobNameSplitted.size() > 1 ? jobNameSplitted[1] : jobNameDecoded
-      def author = gitCommitAuthor
+      def author = gitCommitAuthor()
 
       channels += "#jenkins"
       channels.each {
