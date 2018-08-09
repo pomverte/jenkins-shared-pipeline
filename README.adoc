@@ -1,5 +1,11 @@
 = Jenkins Shared Pipelines
 
+== Pipelines
+
+. link:./vars/mavenPipeline.groovy[mavenPipeline.groovy]
+. link:./vars/dockerPipeline.groovy[dockerPipeline.groovy]
+
+
 == Use me
 
 .Jenkinsfile
