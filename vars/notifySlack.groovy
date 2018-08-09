@@ -14,7 +14,7 @@ def call(String buildStatus, String[] channels = []) {
 
       channels += "#jenkins"
       channels.each {
-        sh "curl -v -X POST -H 'Content-type: application/json' --data '${slackData}' https://hooks.slack.com/services/${SLACK_API_TOKEN}"
+        sh "curl -v -X POST -H 'Content-type: application/json' --data '{\"username\":\"Jenkins\",\"icon_url\":\"https://www.build-business-websites.co.uk/resources/jenkins-butler-square.png\",\"channel\":\"${it}\",\"attachments\":[{\"fallback\":\"${currentBuild.absoluteUrl}\",\"color\":\"$colorCode\",\"author_name\":\"$author\",\"title\":\"$jobNameShort\",\"title_link\":\"${env.BUILD_URL}console\",\"text\":\"Build ${env.JOB_NAME} #${env.BUILD_NUMBER} is a ${buildStatus}$msg\"}]}' https://hooks.slack.com/services/${SLACK_API_TOKEN}"
       }
     }
 
