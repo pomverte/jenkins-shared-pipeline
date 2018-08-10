@@ -24,7 +24,7 @@ mavenPipeline {
 ----
 #!groovy
 dockerPipeline {
-  pushDockerImage = false
+  pushDockerImage = 'false'
 }
 ----
 
