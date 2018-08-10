@@ -4,6 +4,7 @@
 
 . link:./vars/mavenPipeline.groovy[mavenPipeline.groovy]
 . link:./vars/dockerPipeline.groovy[dockerPipeline.groovy]
+. link:./vars/gitflowPipeline.groovy[gitflowPipeline.groovy]
 
 
 == Use me
@@ -25,6 +26,15 @@ mavenPipeline {
 #!groovy
 dockerPipeline {
   pushDockerImage = 'false'
+}
+----
+
+.Jenkinsfile
+[source,groovy]
+----
+#!groovy
+gitflowPipeline {
+  jgitflowGoal = 'hotfix-start'
 }
 ----
 
