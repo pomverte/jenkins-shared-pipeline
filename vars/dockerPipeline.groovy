@@ -1,4 +1,6 @@
-// maybe we could use : https://qa.nuxeo.org/jenkins/pipeline-syntax/globals#docker
+// maybe we could use :
+// - https://qa.nuxeo.org/jenkins/pipeline-syntax/globals#docker
+// - https://jenkins.io/doc/book/pipeline/docker/
 
 def call(Closure body) {
   // evaluate the body block, and collect configuration into the object
