@@ -1,7 +1,7 @@
 def call(String artifactId, String artifactVersion) {
 
   def gitCommitId = gitCommitId()
-  def author = gitCommitAuthor()
+  def author = gitCommitAuthorName()
   def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=%ae HEAD').trim()
   def commitMessage = sh(returnStdout: true, script: 'git --no-pager show -s --format=%B HEAD').trim()
   echo """
