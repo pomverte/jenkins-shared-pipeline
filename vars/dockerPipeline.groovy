@@ -37,7 +37,9 @@ def call(Closure body) {
 
       stage('Docker image build and tag') {
         steps {
-          dockerImageBuild()
+          script {
+            dockerImage.build()
+          }
         }
       }
       stage('Docker image push') {
@@ -45,7 +47,9 @@ def call(Closure body) {
           environment name: 'PUSH_DOCKER_IMAGE', value: 'true'
         }
         steps {
-          dockerImagePush()
+          script {
+            dockerImage.push()
+          }
         }
       }
 
