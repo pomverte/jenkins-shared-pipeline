@@ -38,10 +38,7 @@ def call(Closure body) {
         }
       }
 
-      stage('Build Package with Tests') {
-        when {
-          environment name: 'RUN_UNIT_TESTS', value: 'true'
-        }
+      stage('Build Package') {
         agent {
           docker {
             image "${mavenDockerImage}"
@@ -49,21 +46,10 @@ def call(Closure body) {
           }
         }
         steps {
-          runMavenGoal 'clean package'
-        }
-      }
-      stage('Build Package Skip Tests') {
-        when {
-          not { environment name: 'RUN_UNIT_TESTS', value: 'true' }
-        }
-        agent {
-          docker {
-            image "${mavenDockerImage}"
-            args '-v $HOME/.m2:/root/.m2'
+          script {
+            def mvnArgs = ('true' == "${RUN_UNIT_TESTS}") ? '' : '-DskipTests'
+            runMavenGoal "clean package ${mvnArgs}".trim()
           }
-        }
-        steps {
-          runMavenGoal 'clean package -DskipTests'
         }
       }
 
