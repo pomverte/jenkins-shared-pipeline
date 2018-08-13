@@ -7,6 +7,7 @@ def call(Closure body) {
 
   echo "Pipeline configuration :\n${config}\n"
 
+  // TODO define this map outside
   def projects = [
       'tailon-docker': 'http://gitea:3000/hvle/tailon-docker.git',
       'boot-external-config': 'http://gitea:3000/hvle/boot-external-config.git'
