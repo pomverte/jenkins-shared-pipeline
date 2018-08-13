@@ -42,7 +42,8 @@ def call(Closure body) {
         agent {
           docker {
             image "${mavenDockerImage}"
-            args '-v $HOME/.m2:/root/.m2'
+            // FIXME hard coded docker network name
+            args '--net gitea_jenkins_default -v $HOME/.m2:/root/.m2'
           }
         }
         steps {
@@ -60,7 +61,7 @@ def call(Closure body) {
         agent {
           docker {
             image "${mavenDockerImage}"
-            args '-v $HOME/.m2:/root/.m2'
+            args '--net gitea_jenkins_default -v $HOME/.m2:/root/.m2'
             reuseNode true
           }
         }
