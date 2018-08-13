@@ -1,14 +1,12 @@
 def call(String artifactId, String artifactVersion) {
 
-  def gitCommitId = gitCommitId()
-  def author = gitCommitAuthorName()
-  def authorEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=%ae HEAD').trim()
-  def commitMessage = sh(returnStdout: true, script: 'git --no-pager show -s --format=%B HEAD').trim()
+  def gitCommitId = gitme.commitId()
+  def commitAuthor = gitme.commitAuthor()
+  def commitMessage = gitme.commitMessage()
   echo """
 
 Branch : ${env.BRANCH_NAME}
-Author : ${author}
-Email : ${authorEmail}
+Author : ${commitAuthor}
 Commit : ${gitCommitId}
 Comment : ${commitMessage}
 ArtifactId : ${artifactId}
