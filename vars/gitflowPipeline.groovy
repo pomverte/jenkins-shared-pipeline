@@ -48,16 +48,12 @@ def call(Closure body) {
           runJGitflowGoal "${config.jgitflowGoal}"
         }
       }
-      stage('Cleanup workspace') {
-        steps {
-          deleteDir()
-        }
-      }
     }
 
     post {
       always {
         notifySlack "${currentBuild.currentResult}", "#graylog-notifications"
+        deleteDir()
       }
     }
 
