@@ -53,7 +53,7 @@ def call(Closure body) {
         }
       }
 
-      stage('Deploy Artifact') {
+      stage('Upload Artifact') {
         when {
           environment name: 'NEXUS_DEPLOY', value: 'true'
         }

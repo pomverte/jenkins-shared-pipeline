@@ -36,7 +36,7 @@ def call(Closure body) {
           git url: projects.get(params.PROJECT)
         }
       }
-      stage('Release') {
+      stage('jGitflow') {
         agent {
           docker {
             image 'maven:3.5.4-jdk-8-alpine'
