@@ -34,6 +34,8 @@ def call(Closure body) {
       stage('Checkout SCM') {
         steps {
           git url: projects.get(params.PROJECT)
+          sh 'git config user.name jenkins'
+          sh 'git config user.email jenkins@jenkins.ci'
         }
       }
       stage('jGitflow') {
