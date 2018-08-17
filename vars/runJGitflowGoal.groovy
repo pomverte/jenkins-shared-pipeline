@@ -2,10 +2,10 @@ def call(String goal) {
   def params = ''
   switch(goal) {
     case ~/^feature-.*$/:
-      params = '-DpushFeatures=true -DreleaseBranchVersionSuffix=RC'
+      params = '-DpushFeatures=true'
       break
     case ~/^release-.*$/:
-      params = '-DpushReleases=true'
+      params = '-DpushReleases=true -DreleaseBranchVersionSuffix=RC'
       break
     case ~/^hotfix-.*$/:
       params = '-DpushHotfixes=true -DnoHotfixBuild=true -DreleaseVersion=' + getHotfixVersion()
