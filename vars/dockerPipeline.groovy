@@ -38,14 +38,14 @@ def call(Closure body) {
       stage('Linting') {
         environment {
           HADOLINT_DOCKER_IMAGE = 'hadolint/hadolint:v1.10.4'
-          HADOLINT_DOCKER_CMD = 'hadolint --ignore DL3018 --ignore DL3013 /tmp/Dockerfile'
+          HADOLINT_DOCKER_CMD = 'hadolint --ignore DL3018 --ignore DL3013 /app/Dockerfile'
           JENKINS_VOLUME = 'gitea_jenkins_jenkins_home' // FIXME hard coded docker volume name here ...
         }
         steps {
           script {
             def path = pwd().split('/')
             def workspace = "/var/lib/docker/volumes/${JENKINS_VOLUME}/_data/workspace/" + path[path.size() - 1]
-            sh "docker container run --rm -i -v ${workspace}/Dockerfile:/tmp/Dockerfile ${HADOLINT_DOCKER_IMAGE} ${HADOLINT_DOCKER_CMD}"
+            sh "docker container run --rm -i -v ${workspace}/Dockerfile:/app/Dockerfile ${HADOLINT_DOCKER_IMAGE} ${HADOLINT_DOCKER_CMD}"
           }
         }
       }
