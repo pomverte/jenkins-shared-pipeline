@@ -55,7 +55,7 @@ def call(Closure body) {
 
     post {
       always {
-        notifySlack "${currentBuild.currentResult}", "#graylog-notifications"
+        notifySlack "${currentBuild.currentResult}"
         deleteDir()
       }
     }
