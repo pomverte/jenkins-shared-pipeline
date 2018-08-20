@@ -19,6 +19,7 @@ def call(Closure body) {
       //DOCKER_REGISTRY_SERVER = ''
       DOCKER_REGISTRY_USER = "vietnem"
       PUSH_DOCKER_IMAGE = "${config.pushDockerImage}"
+      RUN_DOCKER_IMAGE = "${config.runDockerImage}"
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
     }
@@ -57,6 +58,7 @@ def call(Closure body) {
           }
         }
       }
+
       stage('Image push') {
         when {
           environment name: 'PUSH_DOCKER_IMAGE', value: 'true'
@@ -64,6 +66,29 @@ def call(Closure body) {
         steps {
           script {
             dockerImage.push()
+          }
+        }
+      }
+
+      // FIXME THIS STAGE IS TEMPORARY
+      // TODO call WORKSHOP
+      stage('Container run') {
+        when {
+          environment name: 'RUN_DOCKER_IMAGE', value: 'true'
+        }
+        steps {
+          script {
+            def jbossContainerId = sh(returnStdout: true, script: 'docker container ls --filter name=jboss --quiet')
+            if (jbossContainerId != '') {
+              sh "docker container stop jboss"
+              sh "docker container rm jboss"
+            } else {
+              jbossContainerId = sh(returnStdout: true, script: 'docker container ls -a --filter name=jboss --quiet')
+              if (jbossContainerId != '') {
+                sh "docker container rm jboss"
+              }
+            }
+            sh "docker container run -d -p 8082:8080 -p 9990:9990 --name jboss ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION}"
           }
         }
       }
