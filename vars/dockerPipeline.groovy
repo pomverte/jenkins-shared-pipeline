@@ -19,7 +19,7 @@ def call(Closure body) {
       //DOCKER_REGISTRY_SERVER = ''
       DOCKER_REGISTRY_USER = "vietnem"
       PUSH_DOCKER_IMAGE = "${config.pushDockerImage}"
-      RUN_DOCKER_IMAGE = "${config.runDockerImage}"
+      RUN_DOCKER_CONTAINER = "${config.runDockerContainer}"
       ARTIFACT_ID = readMavenPom().getArtifactId()
       ARTIFACT_VERSION = readMavenPom().getVersion()
     }
@@ -74,7 +74,7 @@ def call(Closure body) {
       // TODO call WORKSHOP
       stage('Container run') {
         when {
-          environment name: 'RUN_DOCKER_IMAGE', value: 'true'
+          environment name: 'RUN_DOCKER_CONTAINER', value: 'true'
         }
         steps {
           script {
