@@ -89,7 +89,7 @@ def call(Closure body) {
                 sh "docker container rm jboss"
               }
             }
-            sh "docker container run -d -p 8082:8080 -p 9990:9990 --name jboss ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION}"
+            sh "docker container run -d -p 8082:8080 -p 9990:9990 --name jboss --network=mas-dvnet ${DOCKER_REGISTRY_USER}/${ARTIFACT_ID}:${ARTIFACT_VERSION}"
           }
         }
       }
