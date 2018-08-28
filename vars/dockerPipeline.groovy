@@ -25,6 +25,7 @@ def call(Closure body) {
     }
 
     options {
+      disableConcurrentBuilds()
       buildDiscarder(logRotator(numToKeepStr: '10'))
     }
 
